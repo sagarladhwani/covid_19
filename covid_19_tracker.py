@@ -12,7 +12,7 @@
 """
 Author            : Sagar Ladhwani (LinkedIn: https://www.linkedin.com/in/sagar-ladhwani-713b96112/) <br>
 Created On        : 31st May 2021 <br>
-Last Modifiied On : 31st May 2021 <br>
+Last Modifiied On : 22nd June 2021 <br>
 Code Descr        : A detailed tracker of India's Covid-19 Pandemic & Vaccination Drive
 """
 
@@ -95,7 +95,7 @@ print(states)
 # %%
 ## Defining starting and end points for analysis
 start_date = datetime(2021, 1, 1)
-end_date = datetime(2021, 6, 15)
+end_date = datetime.today() + dt.timedelta(days=1)
 
 # %%
 ## Define a function to plot time-series cases trend
@@ -139,7 +139,7 @@ def plot_conf_rec_act(state_name):
     plt.xlabel('Month-Year')
     plt.ylabel('Count')
     plt.title('Total Covid-19 Cases in '+state_name)
-    #ax.legend()
+    plt.legend(facecolor='White')
     plt.show()
 
 # %%
@@ -444,6 +444,9 @@ mod_df.head()
 mod_df.isna().sum()
 
 # %%
+mod_df = mod_df[mod_df['Updated On'] < dt.datetime.today()-dt.timedelta(days=2)].shape
+
+# %%
 """
 ## a. Daily Vaccination jabs by Drug Brands
 """
@@ -481,7 +484,7 @@ def daily_vaccination_plotter_by_drug_brand(state):
     ## Formatting X-axis for appropriate Date format, Major and Minor Ticks along with axis limits
     date_form = DateFormatter("%d-%b-%y")
     ax.xaxis.set_major_formatter(date_form)
-    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1,byweekday=(6)))
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1,byweekday=(2)))
     _, y_top = ax.get_ylim()
     ax.set_ylim(top=max(data['Total CoviShield Administered'])*1.25)
     
@@ -541,7 +544,7 @@ def daily_vaccination_plotter_by_dose_number(state):
     ## Formatting X-axis for appropriate Date format, Major and Minor Ticks along with axis limits
     date_form = DateFormatter("%d-%b-%y")
     ax.xaxis.set_major_formatter(date_form)
-    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1,byweekday=(6)))
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1,byweekday=(2)))
     ax.set_ylim(top=max(data['First Dose Administered'])*1.25)
     _, y_top = ax.get_ylim()
 
@@ -621,7 +624,7 @@ def individual_age_plotter(state):
     ## Formatting X-axis for appropriate Date format, Major and Minor Ticks along with axis limits
     date_form = DateFormatter("%d-%b-%y")
     ax.xaxis.set_major_formatter(date_form)
-    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1,byweekday=(6)))
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1,byweekday=(3)))
     _, y_top = ax.get_ylim()
 
     ## Using a loop to plot text for all the points of each of the 3 trend lines
@@ -632,6 +635,7 @@ def individual_age_plotter(state):
 
     ## Adding Labels
     ax.set_ylim(top=data[['18-45 years (Age)','45-60 years (Age)', '60+ years (Age)']].max().max()*1.6)
+    fig.autofmt_xdate()
     plt.xlabel('Timeline',labelpad=10)
     plt.ylabel('Number of Individuals Vaccinated',labelpad=10)
     plt.title('Vaccinated Individuals Age wise composition of '+state)
